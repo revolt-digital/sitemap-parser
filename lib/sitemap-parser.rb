@@ -19,6 +19,8 @@ class SitemapParser
         if has_custom_user_agent
           request.options[:headers]["User-Agent"] =request.options[:headers][:"User-Agent"]
           request.options[:headers].delete(:"User-Agent")
+        else
+          request.options[:headers]["User-Agent"] ="Sitemap-Parser"
         end
         request.on_complete do |response|
           raise "HTTP request to #{@url} failed" unless response.success?
