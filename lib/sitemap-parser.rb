@@ -15,6 +15,11 @@ class SitemapParser
       if /\Ahttp/i.match?(@url)
         request_options = @options.dup.tap { |opts| opts.delete(:recurse); opts.delete(:url_regex) }
         request = Typhoeus::Request.new(@url, request_options)
+        has_custom_user_agent = request.options[:headers][:"User-Agent"].blank?
+        if has_custom_user_agent
+          request.options[:headers]["User-Agent"]=request.options[:headers][:"User-Agent"]
+          request.options[:headers].delete(:"User-Agent")
+        end
         request.on_complete do |response|
           raise "HTTP request to #{@url} failed" unless response.success?
 
